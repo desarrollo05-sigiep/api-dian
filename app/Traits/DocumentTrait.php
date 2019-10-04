@@ -70,7 +70,7 @@ trait DocumentTrait
     {
         $dir = "zip/{$resolution->company_id}";
         $nameXML = $this->getFileName($company, $resolution);
-        $nameZip = $this->getFileName($company, $resolution, 6, '.zip');
+        $nameZip = str_replace(" ", "", $this->getFileName($company, $resolution, 6, '.zip'));
 
         $this->pathZIP = "app/zip/{$resolution->company_id}/{$nameZip}";
 
@@ -99,7 +99,7 @@ trait DocumentTrait
     protected function getFileName(Company $company, Resolution $resolution, $typeDocumentID = null, $extension = '.xml')
     {
         $date = now();
-        $prefix = (is_null($typeDocumentID)) ? $resolution->type_document->prefix : TypeDocument::findOrFail($typeDocumentID)->prefix;
+        $prefix = trim((is_null($typeDocumentID)) ? $resolution->type_document->prefix : TypeDocument::findOrFail($typeDocumentID)->prefix);
 
         $send = $company->send()->firstOrCreate([
             'year' => $date->format('y'),
