@@ -24,8 +24,7 @@ class ConfigurationCertificateRequest extends FormRequest
     public function rules()
     {
         return [
-            'certificate' => 'required|string',
-            'password' => 'required|string',
+            'certificate' => 'required|string'
         ];
     }
 }

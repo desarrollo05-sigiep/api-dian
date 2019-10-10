@@ -17,7 +17,7 @@ class CreateCertificatesTable extends Migration
             $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
             $table->string('name');
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->timestamps();
         });
     }

@@ -42,7 +42,7 @@ trait DIANTrait
      */
     protected function readCerts()
     {
-        if (is_null($this->pathCertificate) || is_null($this->passwors)) {
+        if (is_null($this->pathCertificate)) {
             throw new Exception('Class '.get_class($this).': requires the certificate path and password.');
         }
         if (!openssl_pkcs12_read(file_get_contents($this->pathCertificate), $this->certs, $this->passwors)) {
@@ -56,8 +56,7 @@ trait DIANTrait
     protected function x509Export()
     {
         if (!empty($this->certs)) {
-            //print_r($this->certs);exit;
-            openssl_x509_export($this->certs['extracerts'][0], $stringCert);
+            openssl_x509_export($this->certs['cert'], $stringCert);
 
             return str_replace([PHP_EOL, '-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----'], '', $stringCert);
         }

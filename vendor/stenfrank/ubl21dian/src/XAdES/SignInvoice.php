@@ -233,7 +233,7 @@ class SignInvoice extends Sign
         $this->digestMethodCert->setAttribute('Algorithm', $this->algorithm['algorithm']);
         $this->certDigest->appendChild($this->digestMethodCert);
 
-        $this->DigestValueCert = base64_encode(openssl_x509_fingerprint($this->certs['extracerts'][0], $this->algorithm['hash'], true));
+        $this->DigestValueCert = base64_encode(openssl_x509_fingerprint($this->certs['cert'], $this->algorithm['hash'], true));
 
         $this->digestValueCert = $this->domDocument->createElement('ds:DigestValue', $this->DigestValueCert);
         $this->certDigest->appendChild($this->digestValueCert);
@@ -241,10 +241,10 @@ class SignInvoice extends Sign
         $this->issuerSerialCert = $this->domDocument->createElement('xades:IssuerSerial');
         $this->cert->appendChild($this->issuerSerialCert);
 
-        $this->X509IssuerNameCert = $this->domDocument->createElement('ds:X509IssuerName', $this->joinArray(array_reverse(openssl_x509_parse($this->certs['extracerts'][0])['issuer']), false, ','));
+        $this->X509IssuerNameCert = $this->domDocument->createElement('ds:X509IssuerName', $this->joinArray(array_reverse(openssl_x509_parse($this->certs['cert'])['issuer']), false, ','));
         $this->issuerSerialCert->appendChild($this->X509IssuerNameCert);
 
-        $this->X509SerialNumberCert = $this->domDocument->createElement('ds:X509SerialNumber', openssl_x509_parse($this->certs['extracerts'][0])['serialNumber']);
+        $this->X509SerialNumberCert = $this->domDocument->createElement('ds:X509SerialNumber', openssl_x509_parse($this->certs['cert'])['serialNumber']);
         $this->issuerSerialCert->appendChild($this->X509SerialNumberCert);
 
         // Extracerts
