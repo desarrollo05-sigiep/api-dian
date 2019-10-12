@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Stenfrank\UBL21dian\Templates\SOAP\GetStatus;
 use Stenfrank\UBL21dian\Templates\SOAP\GetStatusZip;
@@ -65,7 +66,7 @@ class StateController extends Controller
         $filename = $response->Envelope->Body->GetStatusZipResponse->GetStatusZipResult->DianResponse->XmlFileName;
         return [
             'fileName' => $filename.'.xml',
-            'content' => storage_path('app/xml/'. $user->company->id . '/' . $filename.'.xml')
+            'content' => File::get(storage_path('app/xml/'. $user->company->id . '/' . $filename.'.xml'))
         ] ;
     }
 }
