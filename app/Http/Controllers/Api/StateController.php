@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Stenfrank\UBL21dian\Templates\SOAP\GetStatus;
 use Stenfrank\UBL21dian\Templates\SOAP\GetStatusZip;
 
@@ -48,5 +49,20 @@ class StateController extends Controller
             'message' => 'Consulta generada con éxito',
             'ResponseDian' => $getStatus->signToSend()->getResponseToObject(),
         ];
+    }
+
+    /**
+     * @param $zipId
+     * @throws \Exception
+     */
+    public function downloadXml($zipId){
+        $user = auth()->user();
+
+        $getStatusZip = new GetStatusZip($user->company->certificate->path, $user->company->certificate->password);
+        $getStatusZip->trackId = $zipId;
+
+        $response = $getStatusZip->signToSend()->getResponseToObject();
+        $filename = $response->Envelope->Body->GetStatusZipResponse->GetStatusZipResult->DianResponse->XmlFileName;
+        return response()->download(storage_path('app/xml/'. $user->company->id . '/' . $filename.'.xml'));
     }
 }

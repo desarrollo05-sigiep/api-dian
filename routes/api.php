@@ -17,6 +17,8 @@ Route::prefix('/ubl2.1')->group(function () {
     Route::prefix('/config')->group(function () {
         Route::post('/{nit}/{dv?}', 'Api\ConfigurationController@store');
     });
+
+    Route::post('/download-xml/{zipId}', 'Api\StateController@downloadXml');
 });
 
 Route::middleware('auth:api')->group(function () {
