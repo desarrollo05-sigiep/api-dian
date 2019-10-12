@@ -65,7 +65,7 @@ class StateController extends Controller
         $filename = $response->Envelope->Body->GetStatusZipResponse->GetStatusZipResult->DianResponse->XmlFileName;
         return [
             'fileName' => $filename.'.xml',
-            'content' => response()->download(storage_path('app/xml/'. $user->company->id . '/' . $filename.'.xml'))
+            'content' => storage_path('app/xml/'. $user->company->id . '/' . $filename.'.xml')
         ] ;
     }
 }
