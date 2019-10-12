@@ -18,7 +18,7 @@ Route::prefix('/ubl2.1')->group(function () {
         Route::post('/{nit}/{dv?}', 'Api\ConfigurationController@store');
     });
 
-    Route::get('/download-xml/{zipId}', 'Api\StateController@downloadXml');
+    Route::post('/download-xml/{zipId}', 'Api\StateController@downloadXml');
 });
 
 Route::middleware('auth:api')->group(function () {
