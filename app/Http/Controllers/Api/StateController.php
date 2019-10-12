@@ -63,6 +63,9 @@ class StateController extends Controller
 
         $response = $getStatusZip->signToSend()->getResponseToObject();
         $filename = $response->Envelope->Body->GetStatusZipResponse->GetStatusZipResult->DianResponse->XmlFileName;
-        return response()->download(storage_path('app/xml/'. $user->company->id . '/' . $filename.'.xml'));
+        return [
+            'fileName' => $filename.'.xml',
+            'content' => response()->download(storage_path('app/xml/'. $user->company->id . '/' . $filename.'.xml'))
+        ] ;
     }
 }
