@@ -21,13 +21,40 @@ class StateController extends Controller
     {
         // User
         $user = auth()->user();
+        $billData = [];
 
         $getStatusZip = new GetStatusZip($user->company->certificate->path, $user->company->certificate->password);
         $getStatusZip->trackId = $trackId;
 
+        $response = $getStatusZip->signToSend()->getResponseToObject();
+        $filename = $response->Envelope->Body->GetStatusZipResponse->GetStatusZipResult->DianResponse->XmlFileName;
+        $statusCode = $response->Envelope->Body->GetStatusZipResponse->GetStatusZipResult->DianResponse->StatusCode;
+
+        $storagePath = storage_path('app/xml/'. $user->company->id . '/' . $filename.'.xml');
+        $xmlFile = File::get($storagePath);
+
+        $xmlDom = new \DOMDocument();
+        $xmlDom->loadXML($xmlFile);
+        foreach($xmlDom->getElementsByTagNameNS('urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2', 'UUID') as $currency)
+        {
+           $billData['CUFE'] = $currency->nodeValue;
+        }
+        foreach($xmlDom->getElementsByTagNameNS('urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2', 'IssueDate') as $currency)
+        {
+            $billData['issueDate'] = $currency->nodeValue;
+        }
+        foreach($xmlDom->getElementsByTagNameNS('urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2', 'IssueTime') as $currency)
+        {
+            $billData['issueTime'] = $currency->nodeValue;
+        }
+
         return [
             'message' => 'Consulta generada con éxito',
             'ResponseDian' => $getStatusZip->signToSend()->getResponseToObject(),
+            'fileName' => $filename.'.xml',
+            'content' => $xmlFile,
+            'statusCode' => $statusCode,
+            'billData' => $billData
         ];
     }
 
@@ -50,23 +77,5 @@ class StateController extends Controller
             'message' => 'Consulta generada con éxito',
             'ResponseDian' => $getStatus->signToSend()->getResponseToObject(),
         ];
-    }
-
-    /**
-     * @param $zipId
-     * @throws \Exception
-     */
-    public function downloadXml($zipId){
-        $user = auth()->user();
-
-        $getStatusZip = new GetStatusZip($user->company->certificate->path, $user->company->certificate->password);
-        $getStatusZip->trackId = $zipId;
-
-        $response = $getStatusZip->signToSend()->getResponseToObject();
-        $filename = $response->Envelope->Body->GetStatusZipResponse->GetStatusZipResult->DianResponse->XmlFileName;
-        return [
-            'fileName' => $filename.'.xml',
-            'content' => File::get(storage_path('app/xml/'. $user->company->id . '/' . $filename.'.xml'))
-        ] ;
     }
 }
