@@ -57,7 +57,7 @@ class InvoiceRequest extends FormRequest
             'customer.name' => 'required|string',
             'customer.phone' => 'required|numeric|digits_between:7,10',
             'customer.address' => 'required|string',
-            'customer.email' => 'required|string|email',
+            'customer.email' => 'string|email',
             'customer.merchant_registration' => 'required|string',
 
             // Payment form
