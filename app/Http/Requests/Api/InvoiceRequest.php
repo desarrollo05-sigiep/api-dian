@@ -55,7 +55,7 @@ class InvoiceRequest extends FormRequest
             'customer.tax_id' => 'nullable|exists:taxes,id',
             'customer.type_liability_id' => 'nullable|exists:type_liabilities,id',
             'customer.name' => 'required|string',
-            'customer.phone' => 'required|numeric|digits_between:7,10',
+            'customer.phone' => 'required|numeric|digits_between:1,10',
             'customer.address' => 'required|string',
             'customer.email' => 'string|email',
             'customer.merchant_registration' => 'required|string',
