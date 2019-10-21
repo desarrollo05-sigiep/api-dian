@@ -57,3 +57,8 @@ Route::middleware('auth:api')->group(function () {
         });
     });
 });
+
+Route::group(['middleware' => 'cors'], function () {
+    Route::get('getData', 'v1\MyController@getData');
+    Route::get('getData2', 'v1\MyController@getData2');
+});
