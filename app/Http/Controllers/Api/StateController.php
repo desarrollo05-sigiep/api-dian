@@ -32,20 +32,23 @@ class StateController extends Controller
         $statusCode = $response->Envelope->Body->GetStatusZipResponse->GetStatusZipResult->DianResponse->StatusCode;
 
         if((float) $statusCode == 00) {
-            $filename = $response->Envelope->Body->GetStatusZipResponse->GetStatusZipResult->DianResponse->XmlFileName;
-            $storagePath = storage_path('app/xml/' . $user->company->id . '/' . $filename . '.xml');
-            $xmlFile = File::get($storagePath);
+            $x_filename = $response->Envelope->Body->GetStatusZipResponse->GetStatusZipResult->DianResponse->XmlFileName;
+            if(!$x_filename instanceof \stdClass) {
+                $filename = $x_filename;
+                $storagePath = storage_path('app/xml/' . $user->company->id . '/' . $filename . '.xml');
+                $xmlFile = File::get($storagePath);
 
-            $xmlDom = new \DOMDocument();
-            $xmlDom->loadXML($xmlFile);
-            foreach ($xmlDom->getElementsByTagNameNS('urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2', 'UUID') as $currency) {
-                $billData['CUFE'] = $currency->nodeValue;
-            }
-            foreach ($xmlDom->getElementsByTagNameNS('urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2', 'IssueDate') as $currency) {
-                $billData['issueDate'] = $currency->nodeValue;
-            }
-            foreach ($xmlDom->getElementsByTagNameNS('urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2', 'IssueTime') as $currency) {
-                $billData['issueTime'] = $currency->nodeValue;
+                $xmlDom = new \DOMDocument();
+                $xmlDom->loadXML($xmlFile);
+                foreach ($xmlDom->getElementsByTagNameNS('urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2', 'UUID') as $currency) {
+                    $billData['CUFE'] = $currency->nodeValue;
+                }
+                foreach ($xmlDom->getElementsByTagNameNS('urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2', 'IssueDate') as $currency) {
+                    $billData['issueDate'] = $currency->nodeValue;
+                }
+                foreach ($xmlDom->getElementsByTagNameNS('urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2', 'IssueTime') as $currency) {
+                    $billData['issueTime'] = $currency->nodeValue;
+                }
             }
         }
 
