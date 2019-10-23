@@ -31,7 +31,7 @@ class StateController extends Controller
         $response = $getStatusZip->signToSend()->getResponseToObject();
         $statusCode = $response->Envelope->Body->GetStatusZipResponse->GetStatusZipResult->DianResponse->StatusCode;
 
-        if((float) $statusCode !== 99) {
+        if((float) $statusCode == 00) {
             $filename = $response->Envelope->Body->GetStatusZipResponse->GetStatusZipResult->DianResponse->XmlFileName;
             $storagePath = storage_path('app/xml/' . $user->company->id . '/' . $filename . '.xml');
             $xmlFile = File::get($storagePath);
