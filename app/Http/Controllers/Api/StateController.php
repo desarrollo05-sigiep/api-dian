@@ -30,6 +30,7 @@ class StateController extends Controller
         $getStatusZip->trackId = $trackId;
 
         $response = $getStatusZip->signToSend()->getResponseToObject();
+        print_r($response); exit;
         if(!empty($response)) {
             $statusCode = $response->Envelope->Body->GetStatusZipResponse->GetStatusZipResult->DianResponse->StatusCode;
 
