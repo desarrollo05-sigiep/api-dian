@@ -68,7 +68,7 @@ class ConfigurationController extends Controller
             return [
                 'message' => 'Empresa creada con éxito',
                 'password' => $password,
-                'token' => $password,
+                'token' => $user->api_token,
                 'company' => $user->company,
             ];
         } catch (Exception $e) {
